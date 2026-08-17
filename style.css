@@ -1,0 +1,582 @@
+/* ==========================================================================
+   Dynamic Island Studio - Full Stylesheet
+   ========================================================================== */
+
+/* 1. Reset & Global Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  background-color: #090a0f;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(30, 27, 75, 0.4) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(15, 23, 42, 0.6) 0px, transparent 50%);
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* ==========================================================================
+   2. Smartphone Enclosure (Phone Frame)
+   ========================================================================== */
+.phone-container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  height: 820px;
+  background: #000000 radial-gradient(circle at 50% 15%, #181824 0%, #000000 75%);
+  border-radius: 54px;
+  border: 10px solid #27272a;
+  box-shadow: 
+    0 25px 70px rgba(0, 0, 0, 0.9),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 0 4px rgba(255, 255, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  padding: 14px 18px 20px 18px;
+}
+
+.phone-container::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  width: 50px;
+  height: 4px;
+  background: #27272a;
+  border-radius: 4px;
+  z-index: 150;
+}
+
+/* ==========================================================================
+   3. Dynamic Island Mechanics & Ambient Glow
+   ========================================================================== */
+.island-wrapper {
+  position: relative;
+  z-index: 100;
+  margin-top: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ambient-glow {
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  border-radius: 50px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #3b82f6);
+  background-size: 300% 300%;
+  animation: glowMove 6s ease infinite;
+  filter: blur(14px);
+  opacity: 0.4;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+
+@keyframes glowMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.dynamic-island {
+  position: relative;
+  background: #000000;
+  color: #ffffff;
+  width: 210px;
+  height: 38px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 0 1px rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  overflow: hidden;
+  transition: 
+    width 0.42s cubic-bezier(0.34, 1.56, 0.64, 1),
+    height 0.42s cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-radius 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.dynamic-island.expanded {
+  width: 350px;
+  height: 185px;
+  border-radius: 42px;
+}
+
+.island-activity {
+  display: none;
+  width: 100%;
+  height: 100%;
+}
+
+.island-activity.active {
+  display: block;
+}
+
+.compact-view {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 38px;
+  padding: 0 14px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+}
+
+.dynamic-island.expanded .compact-view {
+  display: none;
+}
+
+.expanded-view {
+  display: none;
+  padding: 16px;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.dynamic-island.expanded .expanded-view {
+  display: flex;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.island-title {
+  color: #e4e4e7;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   4. Battery Charging Component & Liquid Progress
+   ========================================================================== */
+.battery-pill {
+  display: flex;
+  align-items: center;
+}
+
+.battery-shell {
+  position: relative;
+  width: 28px;
+  height: 14px;
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+  padding: 1.5px;
+  background: rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.battery-level-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #34d399);
+  border-radius: 2px;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.8);
+  transition: width 0.5s ease, background 0.3s ease;
+}
+
+.lightning-bolt {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.battery-pin {
+  width: 2px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 0 1px 1px 0;
+}
+
+.compact-percent {
+  color: #34d399;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-weight: 700;
+  font-size: 12px;
+  transition: color 0.3s ease;
+}
+
+.expanded-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.charger-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.magsafe-badge {
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #34d399;
+}
+
+.charger-meta h4 {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.charger-meta p {
+  font-size: 10px;
+  color: #a1a1aa;
+  margin-top: 1px;
+}
+
+.large-percent {
+  font-size: 28px;
+  font-weight: 800;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  color: #34d399;
+  letter-spacing: -1px;
+  transition: color 0.3s ease;
+}
+
+.battery-meter-container {
+  background: rgba(24, 24, 27, 0.85);
+  padding: 10px 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.battery-track {
+  width: 100%;
+  height: 12px;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+  padding: 1.5px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+}
+
+.battery-progress-bar {
+  height: 100%;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #10b981, #34d399);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.7);
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.liquid-shimmer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  animation: shimmer 1.8s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.meter-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #a1a1aa;
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+.presets-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.presets-label {
+  font-size: 10px;
+  color: #71717a;
+  font-weight: 600;
+}
+
+.btn-chip {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e4e4e7;
+  border: none;
+  padding: 3px 8px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-family: ui-monospace, monospace;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-chip:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.btn-chip.active {
+  background: #10b981;
+  color: #000000;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+}
+
+.btn-replay {
+  margin-right: auto;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-replay:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.btn-replay:active {
+  transform: scale(0.95);
+}
+
+/* ==========================================================================
+   5. Music & Timer Activities
+   ========================================================================== */
+.music-compact-art {
+  font-size: 14px;
+}
+
+.sound-wave {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 12px;
+}
+
+.sound-wave span {
+  width: 2.5px;
+  background: #ec4899;
+  border-radius: 2px;
+  animation: wave 0.8s ease-in-out infinite alternate;
+}
+
+.sound-wave span:nth-child(1) { height: 6px; animation-delay: 0.1s; }
+.sound-wave span:nth-child(2) { height: 12px; animation-delay: 0.3s; }
+.sound-wave span:nth-child(3) { height: 8px; animation-delay: 0.2s; }
+.sound-wave span:nth-child(4) { height: 10px; animation-delay: 0.4s; }
+
+@keyframes wave {
+  0% { transform: scaleY(0.4); }
+  100% { transform: scaleY(1.2); }
+}
+
+.music-expanded-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 100%;
+}
+
+.music-art-large {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ec4899, #8b5cf6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: 0 8px 16px rgba(236, 72, 153, 0.3);
+}
+
+.music-info {
+  flex: 1;
+}
+
+.music-info h4 {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.music-info p {
+  font-size: 11px;
+  color: #a1a1aa;
+  margin-bottom: 8px;
+}
+
+.audio-progress-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.audio-progress {
+  width: 45%;
+  height: 100%;
+  background: #ffffff;
+  border-radius: 2px;
+}
+
+.timer-expanded-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+}
+
+.timer-expanded-card h3 {
+  font-size: 38px;
+  font-family: ui-monospace, monospace;
+  font-weight: 800;
+  color: #fbbf24;
+}
+
+.timer-expanded-card p {
+  font-size: 11px;
+  color: #a1a1aa;
+}
+
+/* ==========================================================================
+   6. Lock Screen Content & Clock
+   ========================================================================== */
+.phone-screen-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.lock-clock {
+  font-size: 76px;
+  font-weight: 200;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+  letter-spacing: -2px;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.lock-date {
+  font-size: 15px;
+  font-weight: 500;
+  color: #cbd5e1;
+  margin-top: -8px;
+}
+
+.hint-text {
+  font-size: 11px;
+  font-weight: 500;
+  color: #94a3b8;
+  margin-top: 36px;
+  background: rgba(15, 23, 42, 0.6);
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+}
+
+/* ==========================================================================
+   7. Quick Activity Switcher Bar (Bottom Controls)
+   ========================================================================== */
+.quick-switcher {
+  width: 100%;
+  display: flex;
+  gap: 6px;
+  background: rgba(24, 24, 27, 0.85);
+  backdrop-filter: blur(14px);
+  padding: 6px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+.switch-btn {
+  flex: 1;
+  padding: 8px 4px;
+  font-size: 11px;
+  font-weight: 700;
+  border: none;
+  background: rgba(255, 255, 255, 0.06);
+  color: #d4d4d8;
+  border-radius: 18px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.switch-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.switch-btn:active {
+  transform: scale(0.95);
+}
+
+.switch-btn.active {
+  background: #ffffff;
+  color: #000000;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+}
+
+/* ==========================================================================
+   8. Responsive Design for Mobile Devices
+   ========================================================================== */
+@media (max-width: 480px) {
+  body {
+    padding: 0;
+    background: #000000;
+  }
+  .phone-container {
+    max-width: 100%;
+    height: 100vh;
+    border-radius: 0;
+    border: none;
+    padding: 10px 14px 16px 14px;
+  }
+  .dynamic-island.expanded {
+    width: calc(100vw - 28px);
+  }
+}
