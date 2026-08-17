@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Dynamic Island Studio - الجزيرة التفاعلية</title>
+  
+  <link rel="manifest" href="manifest.json" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#000000" />
+  
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="phone-container" id="phoneContainer">
+    
+    <div class="island-wrapper">
+      <div class="ambient-glow" id="ambientGlow"></div>
+      <div class="dynamic-island" id="dynamicIsland">
+        
+        <div class="island-activity active" id="chargingActivity">
+          <div class="compact-view">
+            <div class="battery-pill">
+              <div class="battery-shell">
+                <div class="battery-level-fill" id="compactBatteryFill" style="width: 88%;"></div>
+                <span class="lightning-bolt">⚡</span>
+              </div>
+              <div class="battery-pin"></div>
+            </div>
+            <span class="island-title">جاري الشحن</span>
+            <span class="compact-percent" id="compactPercentText">88%</span>
+          </div>
+
+          <div class="expanded-view">
+            <div class="expanded-header">
+              <div class="charger-meta">
+                <div class="magsafe-badge">⚡</div>
+                <div>
+                  <h4 id="chargerTitle">شاحن MagSafe اللاسلكي</h4>
+                  <p>شحن فائق السرعة (15W) • متصل وآمن</p>
+                </div>
+              </div>
+              <div class="large-percent" id="expandedPercentText">88%</div>
+            </div>
+
+            <div class="battery-meter-container">
+              <div class="battery-track">
+                <div class="battery-progress-bar" id="expandedBatteryBar" style="width: 88%;">
+                  <div class="liquid-shimmer"></div>
+                </div>
+              </div>
+              <div class="meter-footer">
+                <span>صحة البطارية 98% (ممتازة)</span>
+                <span>شحن محسن نشط</span>
+              </div>
+            </div>
+
+            <div class="presets-row">
+              <span class="presets-label">اختر النسبة:</span>
+              <button class="btn-chip" onclick="setBattery(15)">15%</button>
+              <button class="btn-chip" onclick="setBattery(45)">45%</button>
+              <button class="btn-chip active" onclick="setBattery(88)">88%</button>
+              <button class="btn-chip" onclick="setBattery(100)">100%</button>
+              <button class="btn-replay" onclick="replayChargingAnimation()">🔄 إعادة التأثير</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="island-activity" id="musicActivity">
+          <div class="compact-view">
+            <div class="music-compact-art">🎵</div>
+            <span class="island-title">Blinding Lights</span>
+            <div class="sound-wave">
+              <span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+          <div class="expanded-view">
+            <div class="music-expanded-card">
+              <div class="music-art-large">🎧</div>
+              <div class="music-info">
+                <h4>Starboy - Weekend</h4>
+                <p>Apple Music • تشغيل فائق الدقة</p>
+                <div class="audio-progress-bar"><div class="audio-progress"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="island-activity" id="timerActivity">
+          <div class="compact-view">
+            <span class="timer-icon">⏱️</span>
+            <span class="island-title">المؤقت</span>
+            <span class="compact-percent">04:59</span>
+          </div>
+          <div class="expanded-view">
+            <div class="timer-expanded-card">
+              <h3>04:59</h3>
+              <p>مؤقت استراحة الشاي والعمل</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="phone-screen-content">
+      <div class="lock-clock" id="liveClock">14:30</div>
+      <div class="lock-date" id="liveDate">الخميس، 17 أغسطس</div>
+      <p class="hint-text">💡 انقر على الجزيرة في الأعلى لتوسيعها / تصغيرها</p>
+    </div>
+
+    <div class="quick-switcher">
+      <button class="switch-btn active" onclick="switchActivity('charging')">⚡ الشحن</button>
+      <button class="switch-btn" onclick="switchActivity('music')">🎵 الموسيقى</button>
+      <button class="switch-btn" onclick="switchActivity('timer')">⏱️ المؤقت</button>
+      <button class="switch-btn" onclick="toggleIslandExpansion()">⤢ توسيع / تصغير</button>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
