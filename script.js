@@ -2,6 +2,7 @@
    Dynamic Island Studio - Complete JavaScript Engine
    ========================================================================== */
 
+// 1. نظام محاكاة الصوتيات التفاعلي (Web Audio API)
 class SoundFXController {
   constructor() {
     this.ctx = null;
@@ -16,17 +17,19 @@ class SoundFXController {
       }
     }
     if (this.ctx && this.ctx.state === 'suspended') {
-      this.ctx.resume();
+      this.ctx.resume().catch(() => {});
     }
   }
 
+  // رنة اتصال شاحن MagSafe المميزة من Apple
   playMagSafeChime() {
     if (!this.isEnabled) return;
     try {
       this.init();
-      if (!this.ctx) return;
+      if (!this.ctx || this.ctx.state === 'suspended') return;
       const now = this.ctx.currentTime;
 
+      // صوت النقر المغناطيسي المنخفض (Magnetic Thud)
       const thudOsc = this.ctx.createOscillator();
       const thudGain = this.ctx.createGain();
       thudOsc.type = 'sine';
@@ -39,6 +42,7 @@ class SoundFXController {
       thudOsc.start(now);
       thudOsc.stop(now + 0.12);
 
+      // توافقيات النغمة الموسيقية للرنة (Harmonic Chords: G4 -> C5 -> E5 -> G5)
       const chordFrequencies = [392.00, 523.25, 659.25, 783.99];
       chordFrequencies.forEach((freq, idx) => {
         if (!this.ctx) return;
@@ -64,11 +68,12 @@ class SoundFXController {
     }
   }
 
+  // صوت النقر والتفاعل مع الأزرار
   playPop() {
     if (!this.isEnabled) return;
     try {
       this.init();
-      if (!this.ctx) return;
+      if (!this.ctx || this.ctx.state === 'suspended') return;
       const now = this.ctx.currentTime;
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
@@ -86,6 +91,7 @@ class SoundFXController {
 
 const soundFx = new SoundFXController();
 
+// 2. مراجع عناصر واجهة المستخدم (DOM Elements)
 const dynamicIsland = document.getElementById('dynamicIsland');
 const compactBatteryFill = document.getElementById('compactBatteryFill');
 const compactPercentText = document.getElementById('compactPercentText');
@@ -99,25 +105,37 @@ const liveDate = document.getElementById('liveDate');
 let currentBatteryLevel = 88;
 let animationFrameId = null;
 
+// 3. توسيع وتصغير الجزيرة الديناميكية
 function toggleIslandExpansion() {
   soundFx.playPop();
-  dynamicIsland.classList.toggle('expanded');
+  if (dynamicIsland) {
+    dynamicIsland.classList.toggle('expanded');
+  }
 }
 
-dynamicIsland.addEventListener('click', (e) => {
-  if (e.target.closest('button')) return;
-  toggleIslandExpansion();
-});
+if (dynamicIsland) {
+  dynamicIsland.addEventListener('click', (e) => {
+    // منع التصغير إذا تم النقر على أزرار التحكم الداخلية
+    if (e.target.closest('button')) return;
+    toggleIslandExpansion();
+  });
+}
 
-function setBattery(targetPercent) {
+// 4. دالة تعيين مستوى البطارية والأنيميشن التصاعدي
+function setBattery(targetPercent, playSound = true) {
   currentBatteryLevel = targetPercent;
-  soundFx.playMagSafeChime();
+  
+  if (playSound) {
+    soundFx.playMagSafeChime();
+  }
 
+  // تحديث أزرار النسب السريعة
   document.querySelectorAll('.btn-chip').forEach((btn) => {
     const isTarget = btn.innerText.trim() === `${targetPercent}%`;
     btn.classList.toggle('active', isTarget);
   });
 
+  // تحديث نصوص نوع الشاحن
   if (chargerTitle) {
     chargerTitle.innerText = targetPercent === 100 
       ? 'اكتمل الشحن بالكامل' 
@@ -126,34 +144,38 @@ function setBattery(targetPercent) {
       : 'شاحن MagSafe اللاسلكي';
   }
 
+  // إلغاء أي أنيميشن سابقة إن وجدت
   if (animationFrameId) {
     cancelAnimationFrame(animationFrameId);
   }
 
   const startPercent = 0;
-  const duration = 900;
+  const duration = 850; // مدة الأنيميشن بالمللي ثانية
   const startTime = performance.now();
 
   function animate(currentTime) {
     const elapsed = currentTime - startTime;
     const progress = Math.min(elapsed / duration, 1);
     
+    // معادلة التباطؤ الانسيابي Ease-Out Cubic
     const easeOutProgress = 1 - Math.pow(1 - progress, 3);
     const currentValue = Math.round(startPercent + (targetPercent - startPercent) * easeOutProgress);
 
+    // تحديث العرض المدمج والموسع
     if (compactBatteryFill) compactBatteryFill.style.width = `${currentValue}%`;
     if (expandedBatteryBar) expandedBatteryBar.style.width = `${currentValue}%`;
     if (compactPercentText) compactPercentText.innerText = `${currentValue}%`;
     if (expandedPercentText) expandedPercentText.innerText = `${currentValue}%`;
 
-    let colorHex = '#10b981';
+    // نظام التلوين الذكي المتجاوب مع مستوى الشحن
+    let colorHex = '#10b981'; // أخضر (طبيعي / ممتلئ)
     let gradientBg = 'linear-gradient(90deg, #10b981, #34d399)';
 
     if (currentValue <= 20) {
-      colorHex = '#ef4444';
+      colorHex = '#ef4444'; // أحمر (منخفض جداً)
       gradientBg = 'linear-gradient(90deg, #ef4444, #f43f5e)';
     } else if (currentValue <= 45) {
-      colorHex = '#f59e0b';
+      colorHex = '#f59e0b'; // برتقالي / أصفر (متوسط)
       gradientBg = 'linear-gradient(90deg, #f59e0b, #eab308)';
     }
 
@@ -170,46 +192,59 @@ function setBattery(targetPercent) {
   animationFrameId = requestAnimationFrame(animate);
 }
 
+// إعادة تشغيل تأثير الشحن
 function replayChargingAnimation() {
-  setBattery(currentBatteryLevel);
+  setBattery(currentBatteryLevel, true);
 }
 
-function switchActivity(activityName) {
+// 5. نظام التبديل بين الأنشطة (شحن / موسيقى / مؤقت)
+function switchActivity(activityName, event) {
   soundFx.playPop();
 
+  // إخفاء كافة الأنشطة
   document.querySelectorAll('.island-activity').forEach((el) => {
     el.classList.remove('active');
   });
 
+  // تحديث حالة الأزرار في الشريط السفلي
   document.querySelectorAll('.switch-btn').forEach((btn) => {
     btn.classList.remove('active');
   });
 
+  // إظهار النشاط المختار
   const targetActivity = document.getElementById(`${activityName}Activity`);
   if (targetActivity) {
     targetActivity.classList.add('active');
   }
 
+  // تفعيل تأثيرات مخصصة لكل نشاط
   if (activityName === 'charging') {
-    soundFx.playMagSafeChime();
-    setBattery(currentBatteryLevel);
+    setBattery(currentBatteryLevel, true);
   }
 
-  const activeBtn = Array.from(document.querySelectorAll('.switch-btn')).find((b) =>
-    b.getAttribute('onclick')?.includes(activityName)
-  );
-  if (activeBtn) activeBtn.classList.add('active');
+  // تحديد الزر النشط في الشريط السفلي
+  if (event && event.currentTarget) {
+    event.currentTarget.classList.add('active');
+  } else {
+    const activeBtn = Array.from(document.querySelectorAll('.switch-btn')).find((b) =>
+      b.getAttribute('onclick')?.includes(activityName)
+    );
+    if (activeBtn) activeBtn.classList.add('active');
+  }
 }
 
+// 6. الساعة الحية والتاريخ العربي
 function updateClockAndDate() {
   const now = new Date();
   
+  // صيغة الوقت (ساعات:دقائق)
   const hours = String(now.getHours()).padStart(2, '0');
   const minutes = String(now.getMinutes()).padStart(2, '0');
   if (liveClock) {
     liveClock.innerText = `${hours}:${minutes}`;
   }
 
+  // صيغة التاريخ باللغة العربية
   if (liveDate) {
     const days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
     const months = [
@@ -226,14 +261,7 @@ function updateClockAndDate() {
 setInterval(updateClockAndDate, 1000);
 updateClockAndDate();
 
+// 7. تشغيل أولي آمن عند تحميل الصفحة بدون تشغيل الصوت تلقائياً
 window.addEventListener('DOMContentLoaded', () => {
-  setBattery(88);
+  setBattery(88, false);
 });
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').catch((err) => {
-      console.log('Service Worker registration skipped:', err);
-    });
-  });
-}
