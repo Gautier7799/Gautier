@@ -1,24 +1,70 @@
 {
-  "name": "Dynamic Island",
-  "short_name": "DynIsland",
-  "description": "الجزيرة التفاعلية الديناميكية على الهاتف",
-  "start_url": "/dynamic-island/",
+  "id": "com.dynamicisland.studio",
+  "name": "Dynamic Island Studio",
+  "short_name": "DynamicIsland",
+  "description": "الجزيرة التفاعلية الديناميكية على الهاتف مع أنيميشن شحن البطارية والموسيقى والمكالمات",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
   "background_color": "#000000",
   "theme_color": "#000000",
   "orientation": "portrait-primary",
+  "categories": ["utilities", "personalization", "productivity"],
   "icons": [
     {
       "src": "icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
       "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "شاشة الجزيرة التفاعلية لشحن البطارية"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "واجهة Dynamic Island الموسعة"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "شحن البطارية",
+      "url": "./index.html?action=charging",
+      "description": "عرض حالة الشحن في الجزيرة"
+    },
+    {
+      "name": "مشغل الموسيقى",
+      "url": "./index.html?action=music",
+      "description": "عرض مشغل الموسيقى والتفاعل"
     }
   ]
 }
