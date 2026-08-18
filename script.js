@@ -265,3 +265,21 @@ updateClockAndDate();
 window.addEventListener('DOMContentLoaded', () => {
   setBattery(88, false);
 });
+// دالة إضافية لإنهاء المكالمة
+function endCall(e) {
+  if (e) e.stopPropagation();
+  soundFx.playPop();
+  switchActivity('charging');
+}
+
+// دالة عداد مدة المكالمة الحية
+let callSeconds = 42;
+setInterval(() => {
+  const callDurationEl = document.getElementById('callDuration');
+  if (callDurationEl) {
+    callSeconds++;
+    const mins = String(Math.floor(callSeconds / 60)).padStart(2, '0');
+    const secs = String(callSeconds % 60).padStart(2, '0');
+    callDurationEl.innerText = `${mins}:${secs} • مكالمة صوتية HD`;
+  }
+}, 1000);
